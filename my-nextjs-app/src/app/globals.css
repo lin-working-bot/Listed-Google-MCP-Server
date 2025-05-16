@@ -1,0 +1,420 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+
+    --radius: 0.5rem;
+
+    /* 薄荷曼波渐变色 - 更专业的配色 */
+    --mint-start: 0, 184, 148; /* 深薄荷绿 */
+    --mint-mid: 0, 206, 201; /* 中间薄荷色 */
+    --mint-end: 116, 198, 232; /* 天蓝色 */
+
+    /* 辅助色 */
+    --accent-1: 255, 111, 97; /* 珊瑚红 */
+    --accent-2: 255, 204, 92; /* 金黄色 */
+    --accent-3: 43, 45, 66; /* 深蓝灰 */
+
+    /* 文本颜色 */
+    --text-primary: 43, 45, 66; /* 深蓝灰 */
+    --text-secondary: 95, 106, 117; /* 中灰 */
+    --text-tertiary: 144, 160, 175; /* 浅灰 */
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.prose table {
+  border-collapse: separate !important;
+  border-spacing: 0;
+  width: 100%;
+  margin: 2rem auto;
+  table-layout: auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border: none;
+  text-align: center;
+  display: table;
+  background: white;
+}
+
+.prose th, .prose td {
+  border: none;
+  border-bottom: 1px solid rgba(var(--mint-mid), 0.15);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+  position: relative;
+  vertical-align: middle;
+  min-width: 100px;
+}
+
+.prose th {
+  background: linear-gradient(135deg,
+    rgb(var(--mint-start)),
+    rgb(var(--mint-mid))
+  );
+  color: white !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.05em !important;
+  padding: 20px 16px !important;
+  border-bottom: none !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  height: auto !important;
+  vertical-align: middle !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 添加表头底部装饰线 */
+.prose thead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    rgb(var(--mint-start)),
+    rgb(var(--mint-mid)),
+    rgb(var(--mint-end))
+  );
+  z-index: 11;
+}
+
+.prose td {
+  padding: 18px 16px;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(var(--mint-mid), 0.1);
+  transition: all 0.2s ease;
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tr {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  border-bottom: 1px solid rgba(var(--mint-mid), 0.1) !important;
+}
+
+.prose tr:hover {
+  background-color: rgba(var(--mint-end), 0.08) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 2;
+}
+
+.prose tr:nth-child(even) {
+  background-color: rgba(var(--mint-start), 0.03) !important;
+}
+
+/* 确保链接在表格中正确显示 */
+.prose td a {
+  color: rgb(var(--mint-start)) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  word-break: break-all !important;
+  transition: all 0.3s !important;
+  background: rgba(var(--mint-start), 0.1) !important;
+  padding: 4px 10px !important;
+  border-radius: 12px !important;
+  display: inline-block !important;
+  margin: 2px !important;
+  border: none !important;
+}
+
+.prose td a:hover {
+  color: white !important;
+  background: rgb(var(--mint-start)) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(var(--mint-start), 0.3) !important;
+}
+
+/* 确保所有链接样式一致 */
+.prose a {
+  color: rgb(var(--mint-start)) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: all 0.2s !important;
+  border-bottom: 1px dashed rgba(var(--mint-start), 0.5) !important;
+  padding-bottom: 2px !important;
+  display: inline-block !important;
+}
+
+.prose a:hover {
+  color: rgb(var(--accent-1)) !important;
+  border-bottom: 1px solid rgb(var(--accent-1)) !important;
+}
+
+/* 确保表格内容正确显示 */
+.prose p {
+  margin-top: 1em !important;
+  margin-bottom: 1em !important;
+}
+
+.prose table p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 为第一列添加特殊样式 */
+.prose td:first-child {
+  font-weight: 600;
+  color: rgb(var(--text-primary));
+  border-left: 4px solid rgb(var(--mint-start));
+  background-color: rgba(var(--mint-start), 0.03);
+}
+
+/* 表格响应式设计 */
+@media (max-width: 768px) {
+  .prose table {
+    display: block;
+    overflow-x: auto;
+    white-space: normal;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  .prose th, .prose td {
+    padding: 14px 12px;
+    font-size: 0.85rem;
+    min-width: 120px;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .prose th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 16px 12px !important;
+  }
+
+  .prose td:first-child {
+    border-left-width: 3px;
+  }
+
+  /* 改进移动端表格行悬停效果 */
+  .prose tr:hover {
+    transform: translateY(-1px) !important;
+  }
+}
+
+.search-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* 薄荷曼波渐变背景 */
+.mint-mambo-gradient {
+  background: linear-gradient(135deg,
+    rgb(var(--mint-start)),
+    rgb(var(--mint-mid)),
+    rgb(var(--mint-end))
+  );
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+}
+
+/* 薄荷曼波渐变容器 */
+.mint-mambo-container {
+  background: linear-gradient(135deg,
+    rgb(var(--mint-start)),
+    rgb(var(--mint-mid)),
+    rgb(var(--mint-end))
+  );
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  color: white;
+  text-align: center;
+}
+
+/* 玻璃态效果 */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* 卡片悬停效果 */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* 渐变动画 */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--mint-start), 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--mint-start), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--mint-start), 0);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* 文本居中样式 */
+.prose {
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+.prose p {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  text-align: center !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 0.75em !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.prose ul, .prose ol {
+  display: inline-block !important;
+  text-align: left !important;
+  margin: 0 auto !important;
+}
+
+.prose table {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  width: 90% !important;
+  max-width: 800px !important;
+}
+
+/* 确保表格内容居中 */
+.prose table td,
+.prose table th {
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 12px !important;
+}

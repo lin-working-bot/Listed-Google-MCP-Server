@@ -1,0 +1,11 @@
+/.env
+/deep.py
+/goodemo.py
+/goosearch_app.html
+/goosearch_server.py
+/weather.py
+/weather_app.html
+/weather_server.py
+/__pycache__
+/node_modules
+/venv
