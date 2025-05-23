@@ -14,6 +14,10 @@ const OPENAI_API_KEY = "sk-ZgmSsStO4PqVVWc9xV2blbCt4H95KhgSRX8D4Ai0Q79SfdT6";
 const OPENAI_API_URL = "https://newapi.tu-zi.com/v1/chat/completions";
 const OPENAI_MODEL = "gpt-4o";
 
+// 获取代理设置
+const HTTP_PROXY = process.env.HTTP_PROXY || '';
+const HTTPS_PROXY = process.env.HTTPS_PROXY || '';
+
 // 设置 OpenAI 客户端
 const client = new OpenAI({
   apiKey: OPENAI_API_KEY,
@@ -22,7 +26,9 @@ const client = new OpenAI({
     "Content-Type": "application/json"
   },
   defaultQuery: {},
-  timeout: 30000, // 30秒超时
+  timeout: 120000, // 增加到120秒超时
+  httpAgent: HTTP_PROXY ? new HttpsProxyAgent(HTTP_PROXY) : undefined,
+  httpsAgent: HTTPS_PROXY ? new HttpsProxyAgent(HTTPS_PROXY) : undefined,
 });
 
 // Google搜索API配置
@@ -154,16 +160,22 @@ ${JSON.stringify(processedData, null, 2)}
           apiURL: OPENAI_API_URL // 显示完整的API URL
         });
 
-        const extractResponse = await this.client.chat.completions.create({
-          model: OPENAI_MODEL, // 使用定义的模型名称
-          messages: [
-            { role: "system", content: "你是一个专业的信息提取助手，擅长从文本中提取结构化信息。你的任务是从提供的数据中提取与查询相关的实体信息。" },
-            { role: "user", content: extractPrompt }
-          ],
-          temperature: 0.1, // 使用较低的温度以获得更确定性的结果
-          max_tokens: 4000
-          // 移除response_format参数，不再强制要求JSON格式
-        });
+        // 使用Promise.race添加额外的超时保护
+        const extractResponse = await Promise.race([
+          this.client.chat.completions.create({
+            model: OPENAI_MODEL, // 使用定义的模型名称
+            messages: [
+              { role: "system", content: "你是一个专业的信息提取助手，擅长从文本中提取结构化信息。你的任务是从提供的数据中提取与查询相关的实体信息。" },
+              { role: "user", content: extractPrompt }
+            ],
+            temperature: 0.1, // 使用较低的温度以获得更确定性的结果
+            max_tokens: 4000
+            // 移除response_format参数，不再强制要求JSON格式
+          }),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('OpenAI API请求超时（100秒）')), 100000)
+          )
+        ]);
 
         console.log('API响应状态:', extractResponse ? '成功' : '失败');
 
@@ -318,15 +330,21 @@ ${entitiesContent}
         apiURL: OPENAI_API_URL // 显示完整的API URL
       });
 
-      const integrateResponse = await this.client.chat.completions.create({
-        model: OPENAI_MODEL, // 使用定义的模型名称
-        messages: [
-          { role: "system", content: "你是一个专业的数据整理助手，擅长整合和归纳信息。你的任务是整合提供的实体信息，并以表格形式输出。" },
-          { role: "user", content: integratePrompt }
-        ],
-        temperature: 0.1,
-        max_tokens: 4000
-      });
+      // 使用Promise.race添加额外的超时保护
+      const integrateResponse = await Promise.race([
+        this.client.chat.completions.create({
+          model: OPENAI_MODEL, // 使用定义的模型名称
+          messages: [
+            { role: "system", content: "你是一个专业的数据整理助手，擅长整合和归纳信息。你的任务是整合提供的实体信息，并以表格形式输出。" },
+            { role: "user", content: integratePrompt }
+          ],
+          temperature: 0.1,
+          max_tokens: 4000
+        }),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('OpenAI API请求超时（100秒）')), 100000)
+        )
+      ]);
 
       const integrateContent = integrateResponse?.choices[0]?.message?.content || '';
 
@@ -678,15 +696,22 @@ ${entitiesContent}
         });
 
         // 设置请求超时时间和代理
-        const axiosConfig = {
+        const axiosConfig: any = {
           timeout: 30000, // 30秒超时
           headers: {
             'Accept': 'application/json',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-          },
-          // 使用代理服务器
-          httpsAgent: new HttpsProxyAgent('http://127.0.0.1:7890')
+          }
         };
+
+        // 从环境变量获取代理设置，如果没有则不使用代理
+        const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY;
+        if (proxyUrl) {
+          console.log(`使用代理: ${proxyUrl}`);
+          axiosConfig.httpsAgent = new HttpsProxyAgent(proxyUrl);
+        } else {
+          console.log('未设置代理，直接连接');
+        }
 
         // 发送请求
         console.log(`发送请求到 ${GOOGLE_API_URL}`);
@@ -920,11 +945,21 @@ ${entitiesContent}
 
       // 从搜索结果中提取实体
       console.log('从搜索结果中提取实体...');
-      await this.extractEntitiesFromData(allItemsData, userInput, 'allItems');
+      try {
+        await this.extractEntitiesFromData(allItemsData, userInput, 'allItems');
+      } catch (extractError) {
+        console.error('从搜索结果提取实体失败:', extractError);
+        // 继续处理，不要因为一个提取失败就中断整个流程
+      }
 
       // 从爬取结果中提取实体
       console.log('从爬取结果中提取实体...');
-      await this.extractEntitiesFromData(crawlData, userInput, 'crawlData');
+      try {
+        await this.extractEntitiesFromData(crawlData, userInput, 'crawlData');
+      } catch (extractError) {
+        console.error('从爬取结果提取实体失败:', extractError);
+        // 继续处理，不要因为一个提取失败就中断整个流程
+      }
 
       // 读取entities.txt文件
       let entitiesContent = '';

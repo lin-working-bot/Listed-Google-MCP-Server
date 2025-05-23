@@ -136,10 +136,23 @@ def check_ollama_service():
             print(r"Windows: & \"C:\Users\ASUS\AppData\Local\Programs\Ollama\ollama.exe\" serve")
             print("Linux/Mac: ollama serve")
 
-            # 尝试自动启动 Ollama 服务（仅限 Windows）
+            # 尝试自动启动 Ollama 服务（支持 Windows 和 Linux）
             try:
                 print("\n尝试自动启动 Ollama 服务...")
-                os.system(r"start /B \"\" \"C:\Users\ASUS\AppData\Local\Programs\Ollama\ollama.exe\" serve")
+                # 检测操作系统类型
+                import platform
+                system = platform.system()
+
+                if system == "Windows":
+                    # Windows 系统
+                    os.system(r"start /B \"\" \"C:\Users\ASUS\AppData\Local\Programs\Ollama\ollama.exe\" serve")
+                elif system == "Linux":
+                    # Linux 系统
+                    os.system("ollama serve > /dev/null 2>&1 &")
+                else:
+                    # macOS 或其他系统
+                    os.system("ollama serve &")
+
                 print("已尝试启动 Ollama 服务，请等待几秒钟...")
                 time.sleep(5)  # 等待服务启动
 
@@ -153,7 +166,8 @@ def check_ollama_service():
                         return True, model_names
                 except:
                     pass
-            except:
+            except Exception as e:
+                print(f"启动 Ollama 服务失败: {e}")
                 pass
 
             return False, []
