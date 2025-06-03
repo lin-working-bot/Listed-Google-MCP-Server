@@ -34,12 +34,9 @@ export default function Home() {
   // 配置 marked 库
   useEffect(() => {
     // 设置 marked 选项
-    marked.use({
+    marked.setOptions({
       gfm: true, // 启用 GitHub 风格的 Markdown
       breaks: true, // 启用换行符
-      tables: true, // 确保表格支持
-      headerIds: false, // 禁用标题ID生成
-      mangle: false, // 禁用标题ID混淆
     });
   }, []);
 
@@ -205,6 +202,14 @@ export default function Home() {
           <CardDescription className="text-lg">
             AI 增强的谷歌搜索引擎
           </CardDescription>
+          <div className="mt-4">
+            <a
+              href="/table-demo"
+              className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[rgba(var(--mint-start),0.1)] to-[rgba(var(--mint-mid),0.1)] text-[rgb(var(--mint-start))] rounded-full text-sm font-medium border border-[rgba(var(--mint-start),0.2)] transition-all duration-300 hover:shadow-lg hover:scale-105"
+            >
+              ✨ 查看表格样式演示
+            </a>
+          </div>
         </CardHeader>
 
         <CardContent className="space-y-8">
@@ -321,26 +326,28 @@ export default function Home() {
 
               <CardContent className="p-6 md:p-8">
                 {/* 渲染Markdown内容 */}
-                <div
-                  dangerouslySetInnerHTML={{ __html: marked.parse(result) }}
-                  className="prose max-w-none prose-headings:text-center prose-headings:text-[rgb(var(--text-primary))] prose-a:text-[rgb(var(--mint-start))] prose-strong:text-[rgb(var(--mint-start))] prose-table:border-collapse prose-table:mx-auto prose-table:w-full prose-td:text-center prose-th:text-center prose-th:bg-[rgb(var(--mint-start))] prose-th:text-white"
-                />
+                <div className={`table-container ${result.includes('|') && result.includes('-') ? 'table-success' : ''}`}>
+                  <div
+                    dangerouslySetInnerHTML={{ __html: marked.parse(result) }}
+                    className="prose max-w-none prose-headings:text-center prose-headings:text-[rgb(var(--text-primary))] prose-a:text-[rgb(var(--mint-start))] prose-strong:text-[rgb(var(--mint-start))] enhanced-table"
+                  />
+                </div>
 
                 {/* 添加表格渲染状态提示 */}
                 <div className="mt-8 text-center">
                   {result.includes('|') && result.includes('-') ? (
-                    <div className="inline-flex items-center px-4 py-2 bg-[rgba(var(--mint-start),0.1)] text-[rgb(var(--mint-start))] rounded-full text-sm font-medium">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[rgba(var(--mint-start),0.1)] to-[rgba(var(--mint-mid),0.1)] text-[rgb(var(--mint-start))] rounded-full text-sm font-semibold border-2 border-[rgba(var(--mint-start),0.2)] shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      表格已成功渲染
+                      ✨ 表格已成功渲染
                     </div>
                   ) : (
-                    <div className="inline-flex items-center px-4 py-2 bg-[rgba(var(--accent-2),0.1)] text-[rgb(var(--accent-2))] rounded-full text-sm font-medium">
+                    <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-[rgba(var(--accent-2),0.1)] to-[rgba(var(--accent-1),0.1)] text-[rgb(var(--accent-2))] rounded-full text-sm font-semibold border-2 border-[rgba(var(--accent-2),0.2)] shadow-lg">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
-                      未检测到表格格式
+                      📄 文本格式内容
                     </div>
                   )}
                 </div>

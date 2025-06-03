@@ -1,6 +1,5 @@
 import OpenAI from 'openai';
 import axios from 'axios';
-import { HttpsProxyAgent } from 'https-proxy-agent';
 import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';
@@ -14,10 +13,6 @@ const OPENAI_API_KEY = "sk-ZgmSsStO4PqVVWc9xV2blbCt4H95KhgSRX8D4Ai0Q79SfdT6";
 const OPENAI_API_URL = "https://newapi.tu-zi.com/v1/chat/completions";
 const OPENAI_MODEL = "gpt-4o";
 
-// 获取代理设置
-const HTTP_PROXY = process.env.HTTP_PROXY || '';
-const HTTPS_PROXY = process.env.HTTPS_PROXY || '';
-
 // 设置 OpenAI 客户端
 const client = new OpenAI({
   apiKey: OPENAI_API_KEY,
@@ -27,8 +22,6 @@ const client = new OpenAI({
   },
   defaultQuery: {},
   timeout: 120000, // 增加到120秒超时
-  httpAgent: HTTP_PROXY ? new HttpsProxyAgent(HTTP_PROXY) : undefined,
-  httpsAgent: HTTPS_PROXY ? new HttpsProxyAgent(HTTPS_PROXY) : undefined,
 });
 
 // Google搜索API配置
@@ -172,14 +165,14 @@ ${JSON.stringify(processedData, null, 2)}
             max_tokens: 4000
             // 移除response_format参数，不再强制要求JSON格式
           }),
-          new Promise((_, reject) =>
+          new Promise<never>((_, reject) =>
             setTimeout(() => reject(new Error('OpenAI API请求超时（100秒）')), 100000)
           )
         ]);
 
         console.log('API响应状态:', extractResponse ? '成功' : '失败');
 
-        const extractContent = extractResponse?.choices[0]?.message?.content || '';
+        const extractContent = (extractResponse as any)?.choices?.[0]?.message?.content || '';
 
         if (extractContent && extractContent.trim() !== '') {
           console.log(`成功从${source}获取AI响应`);
@@ -341,12 +334,12 @@ ${entitiesContent}
           temperature: 0.1,
           max_tokens: 4000
         }),
-        new Promise((_, reject) =>
+        new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('OpenAI API请求超时（100秒）')), 100000)
         )
       ]);
 
-      const integrateContent = integrateResponse?.choices[0]?.message?.content || '';
+      const integrateContent = (integrateResponse as any)?.choices?.[0]?.message?.content || '';
 
       if (integrateContent && integrateContent.trim() !== '') {
         console.log('成功整合实体数据');
@@ -695,7 +688,7 @@ ${entitiesContent}
           key: params.key ? '已设置' : '未设置'
         });
 
-        // 设置请求超时时间和代理
+        // 设置请求超时时间
         const axiosConfig: any = {
           timeout: 30000, // 30秒超时
           headers: {
@@ -703,15 +696,6 @@ ${entitiesContent}
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
           }
         };
-
-        // 从环境变量获取代理设置，如果没有则不使用代理
-        const proxyUrl = process.env.HTTP_PROXY || process.env.HTTPS_PROXY;
-        if (proxyUrl) {
-          console.log(`使用代理: ${proxyUrl}`);
-          axiosConfig.httpsAgent = new HttpsProxyAgent(proxyUrl);
-        } else {
-          console.log('未设置代理，直接连接');
-        }
 
         // 发送请求
         console.log(`发送请求到 ${GOOGLE_API_URL}`);

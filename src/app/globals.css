@@ -90,20 +90,55 @@
   }
 }
 
+/* 表格容器样式 */
+.table-container {
+  margin: 2rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg,
+    rgba(var(--mint-start), 0.02),
+    rgba(var(--mint-mid), 0.02),
+    rgba(var(--mint-end), 0.02)
+  );
+  border-radius: 20px;
+  border: 1px solid rgba(var(--mint-mid), 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.table-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg,
+    rgb(var(--mint-start)),
+    rgb(var(--mint-mid)),
+    rgb(var(--mint-end))
+  );
+  z-index: 1;
+}
+
+.enhanced-table .prose table,
 .prose table {
   border-collapse: separate !important;
   border-spacing: 0;
   width: 100%;
-  margin: 2rem auto;
+  margin: 1rem auto;
   table-layout: auto;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 8px 40px rgba(var(--mint-start), 0.1);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   border: none;
   text-align: center;
   display: table;
   background: white;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 .prose th, .prose td {
@@ -120,14 +155,15 @@
 .prose th {
   background: linear-gradient(135deg,
     rgb(var(--mint-start)),
-    rgb(var(--mint-mid))
-  );
+    rgb(var(--mint-mid)),
+    rgb(var(--mint-end))
+  ) !important;
   color: white !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   text-transform: uppercase !important;
-  font-size: 0.95rem !important;
-  letter-spacing: 0.05em !important;
-  padding: 20px 16px !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.08em !important;
+  padding: 24px 20px !important;
   border-bottom: none !important;
   position: sticky !important;
   top: 0 !important;
@@ -136,7 +172,18 @@
   white-space: normal !important;
   height: auto !important;
   vertical-align: middle !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(var(--mint-start), 0.3) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.prose th:hover {
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(var(--mint-start), 0.4) !important;
 }
 
 /* 添加表头底部装饰线 */
@@ -156,53 +203,102 @@
 }
 
 .prose td {
-  padding: 18px 16px;
+  padding: 20px 18px;
   font-size: 1rem;
-  border-bottom: 1px solid rgba(var(--mint-mid), 0.1);
-  transition: all 0.2s ease;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(var(--mint-mid), 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  background: white;
 }
 
 .prose tr:last-child td {
   border-bottom: none;
 }
 
-.prose tr {
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-  border-bottom: 1px solid rgba(var(--mint-mid), 0.1) !important;
+.prose tbody tr {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border-bottom: 1px solid rgba(var(--mint-mid), 0.05) !important;
+  position: relative;
 }
 
-.prose tr:hover {
-  background-color: rgba(var(--mint-end), 0.08) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+.prose tbody tr:hover {
+  background: linear-gradient(135deg,
+    rgba(var(--mint-start), 0.08),
+    rgba(var(--mint-mid), 0.06),
+    rgba(var(--mint-end), 0.08)
+  ) !important;
+  transform: translateY(-3px) scale(1.01) !important;
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    0 4px 15px rgba(var(--mint-start), 0.15) !important;
   position: relative;
   z-index: 2;
+  border-radius: 8px;
 }
 
-.prose tr:nth-child(even) {
-  background-color: rgba(var(--mint-start), 0.03) !important;
+.prose tbody tr:nth-child(even) {
+  background: linear-gradient(135deg,
+    rgba(var(--mint-start), 0.02),
+    rgba(var(--mint-mid), 0.01),
+    rgba(var(--mint-end), 0.02)
+  ) !important;
+}
+
+.prose tbody tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* 确保链接在表格中正确显示 */
 .prose td a {
   color: rgb(var(--mint-start)) !important;
   text-decoration: none !important;
-  font-weight: 500 !important;
+  font-weight: 600 !important;
   word-break: break-all !important;
-  transition: all 0.3s !important;
-  background: rgba(var(--mint-start), 0.1) !important;
-  padding: 4px 10px !important;
-  border-radius: 12px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: linear-gradient(135deg,
+    rgba(var(--mint-start), 0.1),
+    rgba(var(--mint-mid), 0.08)
+  ) !important;
+  padding: 8px 14px !important;
+  border-radius: 16px !important;
   display: inline-block !important;
-  margin: 2px !important;
-  border: none !important;
+  margin: 3px !important;
+  border: 2px solid rgba(var(--mint-start), 0.2) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.prose td a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.prose td a:hover::before {
+  left: 100%;
 }
 
 .prose td a:hover {
   color: white !important;
-  background: rgb(var(--mint-start)) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 8px rgba(var(--mint-start), 0.3) !important;
+  background: linear-gradient(135deg,
+    rgb(var(--mint-start)),
+    rgb(var(--mint-mid))
+  ) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow:
+    0 6px 20px rgba(var(--mint-start), 0.4),
+    0 2px 10px rgba(var(--mint-start), 0.2) !important;
+  border-color: rgb(var(--mint-start)) !important;
 }
 
 /* 确保所有链接样式一致 */
@@ -234,14 +330,85 @@
 
 /* 为第一列添加特殊样式 */
 .prose td:first-child {
-  font-weight: 600;
+  font-weight: 700;
   color: rgb(var(--text-primary));
-  border-left: 4px solid rgb(var(--mint-start));
-  background-color: rgba(var(--mint-start), 0.03);
+  border-left: 5px solid rgb(var(--mint-start));
+  background: linear-gradient(135deg,
+    rgba(var(--mint-start), 0.05),
+    rgba(var(--mint-mid), 0.03)
+  );
+  position: relative;
+  overflow: hidden;
 }
+
+.prose td:first-child::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(180deg,
+    rgb(var(--mint-start)),
+    rgb(var(--mint-mid)),
+    rgb(var(--mint-end))
+  );
+  transition: width 0.3s ease;
+}
+
+.prose tr:hover td:first-child::before {
+  width: 100%;
+  opacity: 0.1;
+}
+
+/* 添加表格加载动画 */
+@keyframes tableSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enhanced-table .prose table {
+  animation: tableSlideIn 0.6s ease-out;
+}
+
+/* 表格行依次出现动画 */
+@keyframes rowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.prose tbody tr {
+  animation: rowFadeIn 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+.prose tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.prose tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.prose tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.prose tbody tr:nth-child(4) { animation-delay: 0.4s; }
+.prose tbody tr:nth-child(5) { animation-delay: 0.5s; }
+.prose tbody tr:nth-child(n+6) { animation-delay: 0.6s; }
 
 /* 表格响应式设计 */
 @media (max-width: 768px) {
+  .table-container {
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border-radius: 16px;
+  }
+
   .prose table {
     display: block;
     overflow-x: auto;
@@ -249,12 +416,13 @@
     width: 100%;
     max-width: 100%;
     border-radius: 12px;
+    margin: 0.5rem auto;
   }
 
   .prose th, .prose td {
-    padding: 14px 12px;
-    font-size: 0.85rem;
-    min-width: 120px;
+    padding: 16px 10px;
+    font-size: 0.9rem;
+    min-width: 140px;
     white-space: normal;
     word-break: break-word;
   }
@@ -263,16 +431,52 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    padding: 16px 12px !important;
+    padding: 20px 12px !important;
+    font-size: 0.85rem !important;
   }
 
   .prose td:first-child {
-    border-left-width: 3px;
+    border-left-width: 4px;
+    min-width: 120px;
+    font-weight: 700;
   }
 
   /* 改进移动端表格行悬停效果 */
-  .prose tr:hover {
-    transform: translateY(-1px) !important;
+  .prose tbody tr:hover {
+    transform: translateY(-2px) scale(1.005) !important;
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.08),
+      0 3px 12px rgba(var(--mint-start), 0.12) !important;
+  }
+
+  /* 移动端链接样式优化 */
+  .prose td a {
+    padding: 6px 10px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+    margin: 2px !important;
+  }
+
+  /* 移动端表格容器滚动提示 */
+  .table-container::after {
+    content: '← 左右滑动查看更多 →';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: rgba(var(--mint-start), 0.6);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(var(--mint-start), 0.2);
+    animation: pulse 2s infinite;
+  }
+
+  @media (min-width: 769px) {
+    .table-container::after {
+      display: none;
+    }
   }
 }
 
@@ -403,12 +607,13 @@
   margin: 0 auto !important;
 }
 
+/* 表格整体布局优化 */
 .prose table {
   margin-left: auto !important;
   margin-right: auto !important;
   text-align: center !important;
-  width: 90% !important;
-  max-width: 800px !important;
+  width: 95% !important;
+  max-width: 900px !important;
 }
 
 /* 确保表格内容居中 */
@@ -416,5 +621,85 @@
 .prose table th {
   text-align: center !important;
   vertical-align: middle !important;
-  padding: 12px !important;
+  padding: 16px !important;
+}
+
+/* 添加表格数据类型指示器 */
+.prose td[data-type="number"] {
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-weight: 600;
+  color: rgb(var(--accent-2));
+}
+
+.prose td[data-type="url"] {
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 0.9rem;
+}
+
+.prose td[data-type="text"] {
+  line-height: 1.7;
+}
+
+/* 表格加载状态 */
+.table-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.table-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(var(--mint-start), 0.1),
+    transparent
+  );
+  animation: tableShimmer 2s infinite;
+}
+
+@keyframes tableShimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* 表格成功状态指示器 */
+.table-success {
+  position: relative;
+}
+
+.table-success::after {
+  content: '✓';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  background: rgb(var(--mint-start));
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

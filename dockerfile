@@ -61,8 +61,6 @@ echo "Environment variables:"\n\
 echo "NODE_ENV: $NODE_ENV"\n\
 echo "GOOGLE_API_KEY length: ${#GOOGLE_API_KEY}"\n\
 echo "SEARCH_ENGINE_ID: $SEARCH_ENGINE_ID"\n\
-echo "HTTP_PROXY: $HTTP_PROXY"\n\
-echo "HTTPS_PROXY: $HTTPS_PROXY"\n\
 echo "Running next dev..."\n\
 cd /app && next dev\n\
 ' > /usr/local/bin/start-nextjs && \

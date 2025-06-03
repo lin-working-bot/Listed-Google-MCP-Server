@@ -240,21 +240,7 @@ def fetch_webpage_with_timeout(url, timeout=FETCH_TIMEOUT):
                         "verify": True,  # 验证SSL证书
                     }
 
-                    # 尝试添加随机代理（如果有）
-                    try:
-                        import random
-                        proxies = [
-                            None,  # 有时不使用代理
-                            # 可以添加一些免费代理，但可能不稳定
-                            # {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"},
-                        ]
-                        if len(proxies) > 1:  # 如果有代理可用
-                            proxy = random.choice(proxies)
-                            if proxy:
-                                request_params["proxies"] = proxy
-                                print(f"使用代理: {proxy}")
-                    except Exception as e:
-                        print(f"设置代理失败: {e}")
+
 
                     # 发送请求
                     with requests.get(url, **request_params) as response:

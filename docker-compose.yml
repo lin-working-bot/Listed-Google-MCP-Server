@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  nextjs-app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: my-nextjs-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app                     # 本地项目代码挂载到容器 /app
+      - /app/node_modules          # 防止覆盖容器中的依赖
+    env_file:
+      - .env.local
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
